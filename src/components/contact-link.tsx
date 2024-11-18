@@ -80,7 +80,7 @@ export const ContactLink: FC<ContactLinkProps> = ({
       <div className="flex items-center">
         {contact.icon}
         <span className="text-sm">
-          {obfuscated ? <Obfuscate data={encodeData(value)} /> : label}
+          {obfuscated ? <Obfuscate data={encodeData(label)} /> : label}
         </span>
       </div>
       <span className="text-xs text-gray-400">{contact.label}</span>
