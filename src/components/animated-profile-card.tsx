@@ -1,16 +1,17 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { decodeContactData, encodeContactData, getInitials } from "@/lib/utils";
+import { decodeData, getInitials } from "@/lib/utils";
 import { contactSchema } from "@/schemas/contact";
 import { SocialLink } from "@/components/social-link";
 import { ContactLink } from "@/components/contact-link";
+import { encodeData } from "@/server/encode";
 
-export async function AnimatedProfileCardComponent() {
-  const data = JSON.parse(decodeContactData(process.env.CONTACT as string));
+export function AnimatedProfileCardComponent() {
+  const data = JSON.parse(decodeData(process.env.CONTACT as string));
   const contact = contactSchema.parse(data);
 
-  const email = encodeContactData(contact.email);
-  const phone = encodeContactData(contact.phone);
+  const email = encodeData(contact.email);
+  const phone = encodeData(contact.phone);
 
   return (
     <div className="min-h-screen w-full bg-left-top bg-gradient-radial from-gray-200 via-stone-300 to-white flex items-center justify-center p-4">

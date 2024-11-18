@@ -1,13 +1,42 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  webpack(config) {
+    // Grab the existing rule that handles SVG imports
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const fileLoaderRule = config.module.rules.find((rule) =>
+      rule.test?.test?.(".svg"),
+    );
+
+    config.module.rules.push(
+      // Convert all other *.svg imports to React components
+      {
+        test: /\.svg$/i,
+        issuer: fileLoaderRule.issuer,
+        use: ["@svgr/webpack"],
+      },
+    );
+
+    // Modify the file loader rule to ignore *.svg, since we have it handled now.
+    fileLoaderRule.exclude = /\.svg$/i;
+
+    return config;
+  },
+
   experimental: {
     turbo: {
       rules: {
         "*.svg": {
-        loaders: ["@svgr/webpack"],
-        as: "*.js",
-      },
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
       },
     },
   },

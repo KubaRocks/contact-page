@@ -1,8 +1,9 @@
 import { FC, ReactNode } from "react";
 import { Mail, MapPin, Phone, Globe } from "lucide-react";
 import WhatsAppIcon from "@svg/whatsapp.svg";
-import { decodeContactData, encodeContactData, stripNumber } from "@/lib/utils";
+import { decodeData, stripNumber } from "@/lib/utils";
 import { Obfuscate, ObfuscateAnchor } from "@/components/obfuscate";
+import { encodeData } from "@/server/encode";
 
 type ContactType = "email" | "phone" | "whatsapp" | "website" | "location";
 
@@ -72,14 +73,14 @@ export const ContactLink: FC<ContactLinkProps> = ({
     <Component
       href={!obfuscated ? `${contact.href}${value}` : ""}
       className="flex items-center justify-between bg-muted rounded-full py-2 px-4 hover:bg-gray-200 transition-all duration-300"
-      data-handle={encodeContactData(value)}
+      data-handle={encodeData(value)}
       data-prefix={contact.href}
       target="_blank"
     >
       <div className="flex items-center">
         {contact.icon}
         <span className="text-sm">
-          {obfuscated ? <Obfuscate data={encodeContactData(value)} /> : label}
+          {obfuscated ? <Obfuscate data={encodeData(value)} /> : label}
         </span>
       </div>
       <span className="text-xs text-gray-400">{contact.label}</span>
@@ -91,7 +92,7 @@ function formatData(data: string, type: ContactType, obfuscated: boolean) {
   const isNumber = type === "phone" || type === "whatsapp";
 
   if (obfuscated) {
-    const decodedData = decodeContactData(data);
+    const decodedData = decodeData(data);
     if (isNumber) {
       const number =
         type === "phone"
